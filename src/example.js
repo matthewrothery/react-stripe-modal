@@ -1,20 +1,6 @@
-[![forthebadge](https://forthebadge.com/images/badges/its-not-a-lie-if-you-believe-it.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
-
-# react-stripe-modal
-
-# How to use
-
-Make sure to include the stripe api
-```html
-<script src="https://js.stripe.com/v3/" async></script>
-```
-
-## Sample Usage
-
-```javascript
 import React from 'react';
 import { render } from 'react-dom';
-import ReactStripeModal from 'react-stripe-modal';
+import ReactStripeModal from './index';
 
 class MyComponent extends React.Component {
 
@@ -57,9 +43,7 @@ class MyComponent extends React.Component {
     }
 }
 
-// Render the React component
 render(
     <MyComponent />,
     document.getElementById("root")
 );
-```

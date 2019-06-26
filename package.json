@@ -2,10 +2,15 @@
   "name": "react-stripe-modal",
   "version": "1.0.0",
   "description": "",
+  "homepage": "https://github.com/matthewrothery/react-stripe-modal",
   "main": "dist/bundle.js",
   "scripts": {
     "start": "webpack-dev-server --env.env --open --config ./webpack/dev.js",
     "build": "./node_modules/webpack-cli/bin/cli.js --env.env --config ./webpack/prod.js"
+  },
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/matthewrothery/react-stripe-modal.git"
   },
   "keywords": [],
   "author": "",

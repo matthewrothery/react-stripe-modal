@@ -2,6 +2,8 @@
 
 # react-stripe-modal
 
+<center><img src="./snapshot.jpg" style="width:450px;" /></center>
+
 # How to use
 
 Make sure to include the stripe api

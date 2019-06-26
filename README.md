@@ -2,7 +2,7 @@
 
 # react-stripe-modal
 
-<center><img src="./snapshot.jpg" style="width:450px;" /></center>
+<p align="center"><img src="./snapshot.jpg" width="450" /></p>
 
 # How to use
 

@@ -16,6 +16,14 @@ class ReactStripeModal extends React.Component {
         this.close = this.close.bind(this);
     }
 
+    componentDidUpdate(prevProps) {
+        if (this.state.open !== this.props.open) {
+            this.setState({
+                open: this.props.open
+            });
+        }
+    }
+
     // Open the modal
     open() {
         this.setState({ open: true });

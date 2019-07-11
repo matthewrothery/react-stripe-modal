@@ -17,7 +17,7 @@ class ReactStripeModal extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (this.state.open !== this.props.open) {
+        if (this.state.open !== this.props.open && prevProps.open !== this.props.open) {
             this.setState({
                 open: this.props.open
             });

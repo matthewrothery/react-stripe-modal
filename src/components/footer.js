@@ -2,7 +2,7 @@ import React from 'react';
 import styles from '../styles.less';
 
 export default props => {
-    const { valid, errors, onSubmit, close, buttonStyle } = props;
+    const { valid, errors, onSubmit, close, buttonStyle, submitLabel = "Save changes"} = props;
 
     return (
         <div className={styles.footer}>
@@ -17,7 +17,7 @@ export default props => {
                 className={styles.submit} 
                 style={buttonStyle}
                 onClick={onSubmit}
-                value={"Save changes"}
+                value={submitLabel}
                 disabled={!valid}
             />
             <span className={styles.cancel} onClick={close}>Cancel</span>

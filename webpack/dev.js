@@ -20,7 +20,7 @@ module.exports = merge(
             pathinfo: true, // show module paths in the bundle, handy for debugging
         },
         devServer: {
-            port: 3800,
+            port: 3801,
             contentBase: path.join(__dirname, "dist"),
             compress: true,
             historyApiFallback: true,

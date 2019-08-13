@@ -53,6 +53,7 @@ class MyComponent extends React.Component {
                     customerEmail={"demo@website.com"}
                     customerName={"Matt"}
                     onSubmit={this.onSubmit}
+                    buttonLabel={"Save Changes"}
                 />
             </div>
         )

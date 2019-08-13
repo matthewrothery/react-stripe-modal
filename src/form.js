@@ -115,7 +115,7 @@ class Form extends React.Component {
     }
 
     render() {
-        const { headerColor, headerBackgroundColor, buttonStyle, close } = this.props;
+        const { headerColor, headerBackgroundColor, buttonStyle, close, submitLabel } = this.props;
         return (
             <div className={styles.modal}>
                 <div className={styles.content}>
@@ -131,7 +131,7 @@ class Form extends React.Component {
                         <CardNumber type={this.state.cardType} onChange={this.onChange} />
                         <CardExpiry onChange={this.onChange} />
                         <CardCVC onChange={this.onChange} />
-                        <Footer valid={this.state.valid} errors={this.state.errors} onSubmit={this.onSubmit} close={close} buttonStyle={buttonStyle} />
+                        <Footer valid={this.state.valid} errors={this.state.errors} onSubmit={this.onSubmit} close={close} buttonStyle={buttonStyle} submitLabel={submitLabel} />
                     </div>
                 </div>
             </div>

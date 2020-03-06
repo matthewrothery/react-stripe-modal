@@ -1,6 +1,6 @@
 {
   "name": "react-stripe-modal",
-  "version": "1.0.8",
+  "version": "1.1.0",
   "description": "",
   "homepage": "https://github.com/matthewrothery/react-stripe-modal",
   "main": "dist/bundle.js",

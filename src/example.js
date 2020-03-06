@@ -6,19 +6,39 @@ class MyComponent extends React.Component {
 
     constructor(props) {
         super(props);
-        this.reactStripeModalRef = null;
         this.onSubmit = this.onSubmit.bind(this);
         this.openStripeModal = this.openStripeModal.bind(this);
+        this.closeStripeModal = this.closeStripeModal.bind(this);
+
+        this.state = {
+            open: false,
+            errorMessage: null,
+        }
     }
 
     // Open the stripe modal
     openStripeModal() {
-        this.reactStripeModalRef.open();
+        this.setState({
+            open: true,
+        });
+    }
+
+    // Close the stripe modal
+    closeStripeModal() {
+        this.setState({
+            open: false,
+        });
     }
 
     // Handle the submission of the stripe form
     onSubmit(token) {
         console.log(token);
+
+        // Perform validation and any checks
+
+        this.setState({
+            errorMessage: "Failed to process request"
+        });
     }
 
     render() {
@@ -28,9 +48,9 @@ class MyComponent extends React.Component {
 
                 <input type="button" onClick={this.openStripeModal} value={"Update Card Details"} />
 
-                <ReactStripeModal 
-                    ref={e => this.reactStripeModalRef = e}
-                    stripePublicKey={"put_your_api_key_here"} 
+                <ReactStripeModal
+                    open={this.state.open}
+                    stripePublicKey={"stripe-api-key"}
                     headerBackgroundColor={"#098dd5"}
                     headerColor={"#fff"}
                     buttonStyle={{ backgroundColor: "#098dd5", borderColor: "#098dd5" }}
@@ -38,6 +58,8 @@ class MyComponent extends React.Component {
                     customerName={"Matt"}
                     onSubmit={this.onSubmit}
                     buttonLabel={"Upgrade Account"}
+                    onCancel={this.closeStripeModal}
+                    errorMessage={this.state.errorMessage}
                 />
             </div>
         )

@@ -18,13 +18,20 @@ class Form extends React.Component {
 
         this.state = {
             cardType: null,
-            errors: null,
+            isPending: false,
+            errors: {
+                cardNumber: null,
+                cardExpiry: null,
+                cardCvc: null,
+                submitError: null,
+                onSubmitParent: props.errorMessage || null,
+            },
             fields: {
                 card: null,
                 expiry: null,
                 cvc: null
             },
-            valid: false,
+            hasSubmitted: false,
         }
     }
 
@@ -35,7 +42,8 @@ class Form extends React.Component {
         let errors = this.state.errors || {};
         let fields = this.state.fields;
 
-        delete errors['submitError'];
+        errors.submitError = null;
+        errors.onSubmitParent = null;
 
         if (elementType === 'cardNumber') {
             cardType = element.brand === 'unknown' ? null : element.brand;
@@ -63,59 +71,84 @@ class Form extends React.Component {
                 errors[elementType] = "Card CVC cannot be empty";
             }
         } else {
-            delete errors[elementType];
+            errors[elementType] = null
         }
 
         this.setState({
             cardType,
             errors,
             fields,
-            valid: !Object.values(errors).length && fields.card && fields.expiry && fields.cvc
+            hasSubmitted: false,
         });
     }
 
     // Handle form submission
     onSubmit(evt) {
-        const { customerEmail, onSubmit, stripe, customerName, close } = this.props;
+        const { customerEmail, onSubmit, stripe, customerName } = this.props;
         evt.preventDefault();
+        this.setState({
+            isPending: true,
+        }, () => {
+            stripe.createToken({ type: 'card', name: customerName, email: customerEmail }).then((data) => {
+                if (data.error && data.error.message) {
+                    let message = "";
 
-        stripe.createToken({ type: 'card', name: customerName, email: customerEmail }).then((data) => {
-            if (data.error && data.error.message) {
-                let message = "";
-                
-                switch (data.error.type) {
-                    case 'incomplete_number': message = 'Invalid card number'; break;
-                    case 'incomplete_cvc': message = 'Invalid CVC'; break;
-                    case 'incomplete_expiry': message = 'Invalid expiry'; break;
-                    case 'invalid_request_error': {
-                        message = 'Invalid request - please try again later';
-                        console.warn("@react-stripe-modal > invalid Stripe API Key");
-                        break;
+                    switch (data.error.type) {
+                        case 'incomplete_number': message = 'Invalid card number'; break;
+                        case 'incomplete_cvc': message = 'Invalid CVC'; break;
+                        case 'incomplete_expiry': message = 'Invalid expiry'; break;
+                        case 'invalid_request_error': {
+                            message = 'Invalid request - please try again later';
+                            console.warn("@react-stripe-modal > invalid Stripe API Key");
+                            break;
+                        }
+                        default: message = 'Invalid form data'; break;
                     }
-                    default: message = 'Invalid form data'; break;
-                }
 
-                this.setState({
-                    valid: false,
-                    errors: {
-                        ['submitError']: message
-                    }
-                });
-            } else {
-                // There are no errors, lets fetch the token & 
-                // send the token to parent component
-                if (onSubmit && typeof onSubmit === 'function') {
-                    onSubmit(data.token);
-                    close();
+                    this.setState({
+                        errors: {
+                            ...this.state.errors,
+                            submitError: message
+                        },
+                        isPending: false,
+                        hasSubmitted: true,
+                    });
                 } else {
-                    console.warn("@react-stripe-modal > missing onSubmit property");
+                    // There are no errors, lets fetch the token &
+                    // send the token to parent component
+                    if (onSubmit && typeof onSubmit === 'function') {
+                        onSubmit(data.token);
+                    } else {
+                        console.warn("@react-stripe-modal > missing onSubmit property");
+                    }
+                    this.setState({
+                        isPending: false,
+                        hasSubmitted: true,
+                    });
                 }
-            }
+            });
         });
     }
 
+
+    componentDidUpdate(prevProps) {
+        const { errorMessage } = this.props;
+        if (errorMessage && (this.state.errors ? (!this.state.errors.onSubmit || this.state.errors.onSubmit !== errorMessage) : true) && this.isValid() && this.state.hasSubmitted) {
+            this.setState({
+                errors: {
+                    ...this.state.errors,
+                    onSubmitParent: errorMessage,
+                }
+            });
+        }
+    }
+
+    isValid() {
+        return Object.values(this.state.errors).filter(e => e).length === 0;
+    }
+
     render() {
-        const { headerColor, headerBackgroundColor, buttonStyle, close, submitLabel } = this.props;
+        const { headerColor, headerBackgroundColor, buttonStyle, onCancel, submitLabel } = this.props;
         return (
             <div className={styles.modal}>
                 <div className={styles.content}>
@@ -131,7 +164,7 @@ class Form extends React.Component {
                         <CardNumber type={this.state.cardType} onChange={this.onChange} />
                         <CardExpiry onChange={this.onChange} />
                         <CardCVC onChange={this.onChange} />
-                        <Footer valid={this.state.valid} errors={this.state.errors} onSubmit={this.onSubmit} close={close} buttonStyle={buttonStyle} submitLabel={submitLabel} />
+                        <Footer valid={this.isValid()} errors={this.state.errors} onSubmit={this.onSubmit} close={onCancel} buttonStyle={buttonStyle} submitLabel={submitLabel} isPending={this.state.isPending} />
                     </div>
                 </div>
             </div>
